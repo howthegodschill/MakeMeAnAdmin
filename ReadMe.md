@@ -8,16 +8,16 @@ It is recommended to push this script as a policy to self service to run only on
 
 Edits: If you wish to tailor the script to your own needs, here is where to make the changes.
 
-Time Frame for Admin Rights: Line 17  
+**Time Frame for Admin Rights: Line 17**  
 Default time in minutes: 5
 
-User Prompt: Line 22  
+**User Prompt: Line 22**  
 Plain text default message: You now have administrative rights for 5 minutes. DO NOT ABUSE THIS PRIVILEGE...  
 Default button: "Make me an admin, please!"
 
-Time Frame for Logs to Be Pulled:  Line 80   
+**Time Frame for Logs to Be Pulled:  Line 80**  
 String after the "--last" flag in minutes Default: 5m
 
-Location to Save Logs: line 80    
-String after "--output" flag, must be valid directory
+**Location to Save Logs: line 80**  
+String after "--output" flag, must be valid directory  
 Default: /private/var/userToRemove/${userToRemove}-${date}.logarchive
