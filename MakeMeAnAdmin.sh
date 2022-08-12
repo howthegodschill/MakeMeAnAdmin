@@ -62,7 +62,7 @@ fi
 # give the user admin privileges #
 ##################################
 
-/usr/sbin/dseditgroup -o edit -a $currentUser -t user admin
+/usr/sbin/dseditgroup -o edit -a ${currentUser} -t user admin
 
 ########################################
 # write a script for the launch daemon #
@@ -71,14 +71,17 @@ fi
 ########################################
 
 cat << 'EOF' > /Library/Application\ Support/JAMF/removeAdminRights.sh
-if [[ -f /private/var/userToRemove/user ]]; then
-	userToRemove=$(cat /private/var/userToRemove/user)
-	echo "Removing $userToRemove's admin privileges"
-	/usr/sbin/dseditgroup -o edit -d $userToRemove -t user admin
-	rm -f /private/var/userToRemove/user
-	launchctl unload /Library/LaunchDaemons/removeAdmin.plist
-	rm /Library/LaunchDaemons/removeAdmin.plist
-	log collect --last 30m --output /private/var/userToRemove/$userToRemove.logarchive
+#!/bin/sh
+date=$(date +%Y-%m-%d_%H-%M-%S)
+if [ -f /private/var/userToRemove/user ]; then
+    for userToRemove in $(cat /private/var/userToRemove/user); do
+        echo "Removing ${userToRemove}'s admin privileges"
+        /usr/sbin/dseditgroup -o edit -d ${userToRemove} -t user admin
+        log collect --last 30m --output /private/var/userToRemove/${userToRemove}-${date}.logarchive
+    done
+    rm -f /private/var/userToRemove/user
+    launchctl unload /Library/LaunchDaemons/removeAdmin.plist
+    rm /Library/LaunchDaemons/removeAdmin.plist
 fi
 EOF
 
