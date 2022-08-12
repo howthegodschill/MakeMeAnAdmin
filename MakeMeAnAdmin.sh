@@ -77,7 +77,7 @@ if [ -f /private/var/userToRemove/user ]; then
     for userToRemove in $(cat /private/var/userToRemove/user); do
         echo "Removing ${userToRemove}'s admin privileges"
         /usr/sbin/dseditgroup -o edit -d ${userToRemove} -t user admin
-        log collect --last 30m --output /private/var/userToRemove/${userToRemove}-${date}.logarchive
+        log collect --last 5m --output /private/var/userToRemove/${userToRemove}-${date}.logarchive
     done
     rm -f /private/var/userToRemove/user
     launchctl unload /Library/LaunchDaemons/removeAdmin.plist
