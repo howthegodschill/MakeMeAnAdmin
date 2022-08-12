@@ -1,33 +1,29 @@
-#!/bin/bash
+#!/bin/sh
 
-###############################################
-# This script will provide temporary admin    #
-# rights to a standard user right from self   #
-# service. First it will grab the username of #
-# the logged in user, elevate them to admin   #
-# and then create a launch daemon that will   #
-# count down from 30 minutes and then create  #
-# and run a secondary script that will demote #
-# the user back to a standard account. The    #
-# launch daemon will continue to count down   #
-# no matter how often the user logs out or    #
-# restarts their computer.                    #
-###############################################
+################################################################################
+# This script will provide temporary admin rights to a standard user right 		 #
+# from self service.   																												 #
+# First it will grab the username of the logged in user, elevate them to admin #
+# and then create a launch daemon that will count down from 30 minutes and 		 #
+# then create and run a secondary script that will demote the user back to 		 #
+# a standard account.																													 #
+# The launch daemon will continue to count down no matter how often the 			 #
+# user logs out or restarts their computer.                       						 #
+################################################################################
 
 #############################################
 # find the logged in user and let them know #
 #############################################
 
 currentUser=$(who | awk '/console/{print $1}')
-echo $currentUser
+echo ${currentUser}
 
 osascript -e 'display dialog "You now have administrative rights for 30 minutes. DO NOT ABUSE THIS PRIVILEGE..." buttons {"Make me an admin, please"} default button 1'
 
-#########################################################
-# write a daemon that will let you remove the privilege #
-# with another script and chmod/chown to make 			#
-# sure it'll run, then load the daemon					#
-#########################################################
+#############################################################################
+# write a daemon that will let you remove the privilege with another script #
+# and chmod/chown to make sure it'll run, then load the daemon							#
+#############################################################################
 
 #Create the plist
 sudo defaults write /Library/LaunchDaemons/removeAdmin.plist Label -string "removeAdmin"
@@ -45,7 +41,7 @@ sudo defaults write /Library/LaunchDaemons/removeAdmin.plist RunAtLoad -boolean 
 sudo chown root:wheel /Library/LaunchDaemons/removeAdmin.plist
 sudo chmod 644 /Library/LaunchDaemons/removeAdmin.plist
 
-#Load the daemon 
+#Load the daemon
 launchctl load /Library/LaunchDaemons/removeAdmin.plist
 sleep 10
 
